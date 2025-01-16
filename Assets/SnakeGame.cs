@@ -8,9 +8,11 @@ public class SnakeGame : MonoBehaviour
     public SpriteRenderer snakeRenderer;
     public float gridSize; //图片大小
     public float moveInterval = 0.5f;
+
     private List<Transform> snakeBody = new List<Transform>();
     private Vector2 direction = Vector2.right;
     private bool isGameOver = false;
+
 
     void Start()
     {
@@ -18,10 +20,19 @@ public class SnakeGame : MonoBehaviour
         gridSize = spriteSize.x;
         // Initialize snake
         snakeBody.Add(Instantiate(snakePrefab, Vector2.zero, Quaternion.identity).transform);// 实例化蛇头
-        //GrowSnake(); // 增加蛇身
-        
-        StartCoroutine(MoveSnake());
 
+        StartCoroutine(MoveSnake());
+        StartCoroutine(Grows());
+
+    }
+    IEnumerator Grows()
+    {
+        while (!isGameOver)
+        {
+            yield return new WaitForSeconds(1f);
+            GrowSnake();
+        }
+        
     }
 
     void Update()
@@ -70,10 +81,11 @@ public class SnakeGame : MonoBehaviour
 
     
 
-    void GrowSnake(string word) // 增加蛇身
+    void GrowSnake() // 增加蛇身
     {
-        Transform newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).transform;
-        snakeBody.Add(newSegment);
+        SnakeBody newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).GetComponent<SnakeBody>();
+        newSegment.word = "为";// 增加的蛇身显示的文字
+        snakeBody.Add(newSegment.transform);
     }
 
     bool CheckCollision()
