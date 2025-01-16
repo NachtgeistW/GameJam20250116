@@ -35,6 +35,7 @@ public class SnakeGame : MonoBehaviour
             direction = Vector2.left;
         else if (Input.GetKeyDown(KeyCode.D) && direction != Vector2.left)
             direction = Vector2.right;
+
     }
 
     IEnumerator MoveSnake()
