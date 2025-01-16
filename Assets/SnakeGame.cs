@@ -17,9 +17,11 @@ public class SnakeGame : MonoBehaviour
         Vector2 spriteSize = snakeRenderer.sprite.bounds.size; //图片大小
         gridSize = spriteSize.x;
         // Initialize snake
-        snakeBody.Add(Instantiate(snakePrefab, Vector2.zero, Quaternion.identity).transform);
+        snakeBody.Add(Instantiate(snakePrefab, Vector2.zero, Quaternion.identity).transform);// 实例化蛇头
+        //GrowSnake(); // 增加蛇身
         
         StartCoroutine(MoveSnake());
+
     }
 
     void Update()
@@ -68,7 +70,7 @@ public class SnakeGame : MonoBehaviour
 
     
 
-    void GrowSnake() // 增加蛇身
+    void GrowSnake(string word) // 增加蛇身
     {
         Transform newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).transform;
         snakeBody.Add(newSegment);
