@@ -342,10 +342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d280e94d6a3bbc24f93c3acb201a66f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wordPrefab: {fileID: 8627543518380761402, guid: b12624fb7ba23ca4cb34ab57c04abae7, type: 3}
-  tempWordPosition: {x: 0, y: 0}
-  words: []
-  singleWord: 
+  wordPrefab: {fileID: 8627543518380761402, guid: cf22b9d09916a614cbd843354062771f, type: 3}
+  wordRenderer: {fileID: 5699461904391417427, guid: b12624fb7ba23ca4cb34ab57c04abae7, type: 3}
 --- !u!4 &1715375007
 Transform:
   m_ObjectHideFlags: 0
@@ -427,7 +425,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2133456799}
-  - component: {fileID: 2133456798}
+  - component: {fileID: 2133456800}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -435,7 +433,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2133456798
+--- !u!4 &2133456799
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133456797}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2133456800
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -452,21 +465,7 @@ MonoBehaviour:
   gridSize: 0
   moveInterval: 0.5
   snakeHead: {fileID: 1325255178}
---- !u!4 &2133456799
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2133456797}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  currentFood: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

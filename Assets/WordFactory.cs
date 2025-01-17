@@ -9,10 +9,9 @@ using UnityEngine;
 public class WordFactory : MonoBehaviour
 {
     public GameObject wordPrefab;
+    public SpriteRenderer wordRenderer;
     private float gridSize;
-    public Vector2 tempWordPosition;
-    public string[] words;
-    public string singleWord;
+    private Vector2 tempWordPosition;
 
     static List<string> currentWordList;//
 
@@ -20,7 +19,15 @@ public class WordFactory : MonoBehaviour
     void OnDisable() { }
     void Start()
     {
+        gridSize=wordRenderer.bounds.size.x;
+
         currentWordList = new List<string>();
+        currentWordList.Add("为");
+        currentWordList.Add("你");
+        currentWordList.Add("祝");
+        currentWordList.Add("幸");
+        currentWordList.Add("福");
+        currentWordList.Add("康");
         StartCoroutine(SpawnWordInMap());
     }
     public GameObject SpawnSingleWord(string word)
@@ -53,7 +60,7 @@ public class WordFactory : MonoBehaviour
     {
         if (currentWordList.Count > 0)
         {
-            SpawnWords(currentWordList);
+            SnakeGame.currentFood = SpawnWords(currentWordList);
         }
         yield return WordBeDestroyed();
 
