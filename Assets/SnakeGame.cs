@@ -10,6 +10,7 @@ public class SnakeGame : MonoBehaviour
     public float moveInterval = 0.5f;
     public Transform snakeHead;
     
+    public List<Transform> currentFood;
 
     private List<Transform> snakeBody;
     private Vector2 direction = Vector2.right;
@@ -34,32 +35,16 @@ public class SnakeGame : MonoBehaviour
     {
         Vector2 spriteSize = snakeRenderer.sprite.bounds.size; //图片大小
         gridSize = spriteSize.x;
-        
-
-        // Initialize snake
-
 
         StartCoroutine(MoveSnake());
-        StartCoroutine(Grows());
 
     }
     
-    IEnumerator Grows()
-    {
-        while (!isGameOver)
-        {
-            yield return new WaitForSeconds(1f);
-            GrowSnake();
-        }
-        
-    }
 
     void Update()
     {
         
         if (isGameOver) return;
-
-        
 
         // Change direction based on input
         if (Input.GetKeyDown(KeyCode.W) && direction != Vector2.down)
@@ -70,7 +55,6 @@ public class SnakeGame : MonoBehaviour
             direction = Vector2.left;
         else if (Input.GetKeyDown(KeyCode.D) && direction != Vector2.left)
             direction = Vector2.right;
-        
     }
 
     IEnumerator MoveSnake()
@@ -90,7 +74,14 @@ public class SnakeGame : MonoBehaviour
                 prevPosition = temp;
             }
             // Check for collision with words
-            
+            for (int i = 0; i < currentFood.Count; i++)
+            {
+                if (Vector2.Distance(snakeBody[0].position, currentFood[i].position) < gridSize)
+                {
+                    GrowSnake(currentFood[i].GetComponent<WordAction>().word);
+                    //广播吃到食物的消息
+                }
+            }
             // Check for collision with walls or itself
             if (CheckCollision())
             {
@@ -102,10 +93,10 @@ public class SnakeGame : MonoBehaviour
 
     
 
-    void GrowSnake() // 增加蛇身
+    void GrowSnake(string w) // 增加蛇身
     {
         SnakeBody newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).GetComponent<SnakeBody>();
-        newSegment.word = "为";// 增加的蛇身显示的文字
+        newSegment.word = w;// 增加的蛇身显示的文字
         snakeBody.Add(newSegment.transform);
     }
 

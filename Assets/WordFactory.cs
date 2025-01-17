@@ -14,6 +14,15 @@ public class WordFactory : MonoBehaviour
     public string[] words;
     public string singleWord;
 
+    static List<string> currentWordList;//
+
+    void OnEnable() { }
+    void OnDisable() { }
+    void Start()
+    {
+        currentWordList = new List<string>();
+        StartCoroutine(SpawnWordInMap());
+    }
     public GameObject SpawnSingleWord(string word)
     {
         tempWordPosition = new Vector2(
@@ -22,25 +31,41 @@ public class WordFactory : MonoBehaviour
         );
         return Instantiate(wordPrefab, tempWordPosition, Quaternion.identity);
     }
-    public List<Transform> SpawnWords(string words)
+    public List<Transform> SpawnWords(List<string> words)
     {
         List<Transform> wordList = new List<Transform>();
-        for (int i = 0; i < words.Length; i++)
+        foreach (string w in words)
         {
             tempWordPosition = new Vector2(
                 Mathf.Round(Random.Range(-5, 5)) * gridSize,
                 Mathf.Round(Random.Range(-5, 5)) * gridSize
             );
             WordAction tempWordA = Instantiate(wordPrefab, tempWordPosition, Quaternion.identity).GetComponent<WordAction>();
+            tempWordA.word = w;
             wordList.Add(tempWordA.gameObject.transform);
             
             //newWord.GetComponent<TextMesh>().word = word;
         }
         return wordList;
     }
-    void DestoryAllWordsThisTurn(){
-        //广播消息，通知所有Word对象销毁自己
-        //GameObject[] allWords = GameObject.FindGameObjectsWithTag("Word");
+   
+    IEnumerator SpawnWordInMap()
+    {
+        if (currentWordList.Count > 0)
+        {
+            SpawnWords(currentWordList);
+        }
+        yield return WordBeDestroyed();
+
     }
-    
+    IEnumerator WordBeDestroyed()
+    {
+        //接收广播本次销毁开始
+        yield return null;
+    }
+    void DestoryAllWordsThisTurn()
+    {
+        //广播实现函数
+
+    }
 }
