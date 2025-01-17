@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using Assets.Scripts;
 using Plutono.Util;
+using UnityEngine;
 using static Assets.Scripts.GameEvent;
+using Random = System.Random;
 
 namespace Assets
 {
@@ -75,8 +77,8 @@ namespace Assets
             void Init()
             {
                 var wordList = idioms
-                        .Select(i => i.Characters[0].ToString())
-                        .ToList();
+                    .Select(i => i.Characters[0].ToString())
+                    .ToList();
                 var firstCharIndex = random.Next(0, wordList.Count);
                 WordList = new List<string> { wordList[firstCharIndex] };
                 wordList.RemoveAt(firstCharIndex);
@@ -196,12 +198,13 @@ namespace Assets
                     }
 
                     WordList = thirdChars.Select(c => c.ToString()).ToList();
-                    EventCenter.Broadcast(new UpdateWordlistEvent { WordList = WordList }); 
+                    EventCenter.Broadcast(new UpdateWordlistEvent { WordList = WordList });
                     curCharIndex++;
                     break;
                 case 3:
                     curThirdCharacter = evt.AteFoodWord.ToCharArray()[0];
-                    var fourthChars = GetPossibleFourthCharacters(curFirstCharacter, curSecondCharacter, curThirdCharacter);
+                    var fourthChars =
+                        GetPossibleFourthCharacters(curFirstCharacter, curSecondCharacter, curThirdCharacter);
                     if (fourthChars.Count == 0)
                     {
                         EventCenter.Broadcast(new GameOverEvent { isSucceed = false });
@@ -212,89 +215,45 @@ namespace Assets
                     EventCenter.Broadcast(new UpdateWordlistEvent { WordList = WordList });
                     curCharIndex = 4;
                     break;
+                case 4:
+                    curFourthCharacter = evt.AteFoodWord.ToCharArray()[0];
+                    var currentWord = $"{curFirstCharacter}{curSecondCharacter}{curThirdCharacter}{curFourthCharacter}";
+                    if (ValidateIdiom(currentWord))
+                    {
+                        usedIdioms.Add(currentWord);
+                        Debug.Log($"当前成语：{currentWord}");
+
+                        // 检查是否完成循环（通过拼音匹配）
+                        var lastCharPinyin = ChinesePinyin.GetPinyin(curFourthCharacter);
+                        if (lastCharPinyin == firstCharacterPinyin)
+                        {
+                            Debug.Log("恭喜！成功完成首尾相接的成语接龙！");
+                            Debug.Log("使用的成语：");
+                            for (var i = 0; i < usedIdioms.Count; i++)
+                            {
+                                Debug.Log($"{i + 1}. {usedIdioms[i]}");
+                            }
+
+                            gameOver = true;
+                        }
+                        else
+                        {
+                            // 继续游戏
+                            curFirstCharacter = curFourthCharacter;
+                            Debug.Log($"\n下一个成语开始字：{curFirstCharacter}");
+                            var firstChars = GetNextPossibleFirstCharacters(curFirstCharacter);
+                            WordList = firstChars.Select(c => c.ToString()).ToList();
+                            EventCenter.Broadcast(new UpdateWordlistEvent { WordList = WordList });
+                        }
+
+                        curCharIndex = 1;
+                    }
+                    else
+                    {
+
+                    }
+                    break;
             }
-
-            //while (!gameOver)
-            //{
-            //    if (!isFirstTune)
-            //    {
-            //        var firstChars = GetNextPossibleFirstCharacters(currentFirstChar);
-            //        if (firstChars.Count == 0)
-            //        {
-            //            Console.WriteLine($"没有以 {currentFirstChar} 开头或同音的成语！游戏结束！");
-            //            break;
-            //        }
-            //    }
-
-            //    // 获取并选择第二个字
-            //    var secondChars = GetPossibleSecondCharacters(currentFirstChar);
-            //    if (secondChars.Count == 0)
-            //    {
-            //        Console.WriteLine($"没有以 {currentFirstChar} 开头的未使用成语！游戏结束！");
-            //        break;
-            //    }
-
-            //    Console.WriteLine($"可能的第二个字：{string.Join(", ", secondChars)}");
-            //    Console.Write("请选择第二个字：");
-            //    var secondChar = Console.ReadLine()![0];
-
-            //    // 获取并选择第三个字
-            //    var thirdChars = GetPossibleThirdCharacters(currentFirstChar, secondChar);
-            //    if (thirdChars.Count == 0)
-            //    {
-            //        Console.WriteLine($"没有以 {currentFirstChar}{secondChar} 开头的未使用成语！游戏结束！");
-            //        break;
-            //    }
-
-            //    Console.WriteLine($"可能的第三个字：{string.Join(", ", thirdChars)}");
-            //    Console.Write("请选择第三个字：");
-            //    var thirdChar = Console.ReadLine()![0];
-
-            //    // 获取并选择第四个字
-            //    var fourthChars = GetPossibleFourthCharacters(currentFirstChar, secondChar, thirdChar);
-            //    if (fourthChars.Count == 0)
-            //    {
-            //        Console.WriteLine($"没有 {currentFirstChar}{secondChar}{thirdChar} 组成的未使用成语！游戏结束！");
-            //        break;
-            //    }
-
-            //    Console.WriteLine($"可能的第四个字：{string.Join(", ", fourthChars)}");
-            //    Console.Write("请选择第四个字：");
-            //    var fourthChar = Console.ReadLine()![0];
-
-            //    var currentWord = $"{currentFirstChar}{secondChar}{thirdChar}{fourthChar}";
-
-            //    if (ValidateIdiom(currentWord))
-            //    {
-            //        usedIdioms.Add(currentWord);
-            //        Console.WriteLine($"当前成语：{currentWord}");
-
-            //        // 检查是否完成循环（通过拼音匹配）
-            //        var lastCharPinyin = ChinesePinyin.GetPinyin(fourthChar);
-            //        if (lastCharPinyin == firstCharacterPinyin)
-            //        {
-            //            Console.WriteLine("恭喜！成功完成首尾相接的成语接龙！");
-            //            Console.WriteLine("使用的成语：");
-            //            for (var i = 0; i < usedIdioms.Count; i++)
-            //            {
-            //                Console.WriteLine($"{i + 1}. {usedIdioms[i]}");
-            //            }
-            //            gameOver = true;
-            //        }
-            //        else
-            //        {
-            //            // 继续游戏
-            //            currentFirstChar = fourthChar;
-            //            Console.WriteLine($"\n下一个成语开始字：{currentFirstChar}");
-            //            isFirstTune = false;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("这不是一个有效的成语！游戏结束！");
-            //        break;
-            //    }
-            //}
         }
 
     }
