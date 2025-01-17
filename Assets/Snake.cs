@@ -144,8 +144,8 @@ public class Snake : MonoBehaviour
     private bool CheckCollision()
     {
         // Check collision with walls
-        //if (Mathf.Abs(snakeBody[0].position.x) > 10 || Mathf.Abs(snakeBody[0].position.y) > 10)
-        //return true;
+        if (Mathf.Abs(snakeBody[0].position.x) > 7*gridSize || Mathf.Abs(snakeBody[0].position.y) > 7*gridSize)
+            return true;
 
         // Check collision with itself
 
