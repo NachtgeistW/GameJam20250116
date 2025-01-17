@@ -108,9 +108,13 @@ public class Snake : MonoBehaviour
             {
                 if (Vector2.Distance(snakeBody[0].position, currentFood[i].position) < gridSize - 0.1f)
                 {
+                    var food = currentFood[i].GetComponent<WordAction>().word;
                     GrowSnake(currentFood[i].GetComponent<WordAction>().word);
                     //广播吃到食物的消息
-                    EventCenter.Broadcast(new GameEvent.EatFoodEvent());
+                    EventCenter.Broadcast(new GameEvent.EatFoodEvent
+                    {
+                        AteFoodWord = food,
+                    });
                 }
             }
 

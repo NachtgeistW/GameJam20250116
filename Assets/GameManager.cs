@@ -8,21 +8,15 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public IdiomGame Game { get; private set; }
-    //private void OnEnable()
-    //{
-    //    EventCenter.AddListener<GameEvent.GenerateFirstCharacterEvent>();
-    //    EventCenter.AddListener<GameEvent.GetSecondCharacterEvent>();
-    //    EventCenter.AddListener<GameEvent.GetThirdCharacterEvent>();
-    //    EventCenter.AddListener<GameEvent.GetFourthCharacterEvent>();
-    //}
+    private void OnEnable()
+    {
+        EventCenter.AddListener<GameEvent.EatFoodEvent>(Game.PlayGame);
+    }
 
-    //private void OnDisable()
-    //{
-    //    EventCenter.RemoveListener<GameEvent.GenerateFirstCharacterEvent>();
-    //    EventCenter.RemoveListener<GameEvent.GetSecondCharacterEvent>();
-    //    EventCenter.RemoveListener<GameEvent.GetThirdCharacterEvent>();
-    //    EventCenter.RemoveListener<GameEvent.GetFourthCharacterEvent>();
-    //}
+    private void OnDisable()
+    {
+        EventCenter.RemoveListener<GameEvent.EatFoodEvent>(Game.PlayGame);
+    }
 
     protected override void Awake()
     {
@@ -30,6 +24,5 @@ public class GameManager : Singleton<GameManager>
 
         const string filePath = "´Ê¿â.txt";
         Game = new IdiomGame(filePath);
-        Game.PlayGame();
     }
 }

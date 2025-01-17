@@ -6,14 +6,19 @@ namespace Assets.Scripts
 {
     public class GameEvent
     {
-        public struct EatFoodEvent : IEvent { }
-
-        public struct GenerateFirstCharacterEvent : IEvent
+        public struct EatFoodEvent : IEvent
         {
-            public List<string> charList;
+            public string AteFoodWord;
         }
-        public struct GetSecondCharacterEvent : IEvent { }
-        public struct GetThirdCharacterEvent : IEvent { }
-        public struct GetFourthCharacterEvent : IEvent { }
+
+        public struct UpdateWordlistEvent : IEvent
+        {
+            public List<string> WordList;
+        }
+
+        public struct GameOverEvent : IEvent
+        {
+            public bool isSucceed;
+        }
     }
 }

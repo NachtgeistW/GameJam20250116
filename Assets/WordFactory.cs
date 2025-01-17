@@ -20,27 +20,25 @@ public class WordFactory : MonoBehaviour
 
     private void OnEnable()
     {
-        EventCenter.AddListener<GameEvent.EatFoodEvent>(OnEatFoodEvent);
-        EventCenter.AddListener<GameEvent.GenerateFirstCharacterEvent>(OnGenerateFirstCharacterEvent);
+        EventCenter.AddListener<GameEvent.UpdateWordlistEvent>(OnUpdateWordlistEvent);
     }
 
     private void OnDisable()
     {
-        EventCenter.RemoveListener<GameEvent.EatFoodEvent>(OnEatFoodEvent);
-        EventCenter.RemoveListener<GameEvent.GenerateFirstCharacterEvent>(OnGenerateFirstCharacterEvent);
+        EventCenter.RemoveListener<GameEvent.UpdateWordlistEvent>(OnUpdateWordlistEvent);
     }
 
     private void Start()
     {
         gridSize = wordRenderer.bounds.size.x;
 
-        currentWordList.AddRange(GameManager.Instance.Game.firstWordList);
-        SpawnWordInMap();
+        currentWordList.AddRange(GameManager.Instance.Game.WordList);
+        SpawnWordInMap(currentWordList);
     }
 
-    private void OnGenerateFirstCharacterEvent(GameEvent.GenerateFirstCharacterEvent evt)
+    private void OnUpdateWordlistEvent(GameEvent.UpdateWordlistEvent evt)
     {
-;
+        SpawnWordInMap(evt.WordList);
     }
 
     public GameObject SpawnSingleWord(string word)
@@ -70,14 +68,10 @@ public class WordFactory : MonoBehaviour
         return wordList;
     }
 
-    private void OnEatFoodEvent(GameEvent.EatFoodEvent _)
-    {
-        SpawnWordInMap();
-    }
 
-    private void SpawnWordInMap()
+    private void SpawnWordInMap(List<string> words)
     {
-        Snake.currentFood = SpawnWords(currentWordList);
+        Snake.currentFood = SpawnWords(words);
     }
 
 }
