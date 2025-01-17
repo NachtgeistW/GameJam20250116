@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
+using Plutono.Util;
 using UnityEngine;
-public class SnakeGame : MonoBehaviour
+
+public class Snake : MonoBehaviour
 {
     public GameObject snakePrefab;
     //public float gridSize = 1.0f; //单元格大小 使用图片的尺寸
@@ -14,10 +17,10 @@ public class SnakeGame : MonoBehaviour
 
     private List<Transform> snakeBody;
     private Vector2 direction = Vector2.right;
-    private Vector2 headForward= Vector2.right;
+    private Vector2 headForward = Vector2.right;
     private bool isGameOver = false;
 
-    void Awake()
+    private void Awake()
     {
         snakeBody = new List<Transform>();
         if (snakeHead != null)
@@ -32,7 +35,8 @@ public class SnakeGame : MonoBehaviour
         }
 
     }
-    void Start()
+
+    private void Start()
     {
         Vector2 spriteSize = snakeRenderer.sprite.bounds.size; //图片大小
         gridSize = spriteSize.x;
@@ -41,11 +45,12 @@ public class SnakeGame : MonoBehaviour
     }
 
 
-    void Update()
+    private void Update()
     {
         HandleInput();
     }
-    void HandleInput()
+
+    private void HandleInput()
     {
         // 根据输入改变方向
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
@@ -66,7 +71,7 @@ public class SnakeGame : MonoBehaviour
         }
     }
 
-    void ChangeDirection(Vector2 newDirection)
+    private void ChangeDirection(Vector2 newDirection)
     {
         // 防止反向移动
         if (newDirection != -headForward)
@@ -75,7 +80,7 @@ public class SnakeGame : MonoBehaviour
         }
     }
 
-    IEnumerator MoveSnake()
+    private IEnumerator MoveSnake()
     {
         while (!isGameOver)
         {
@@ -83,7 +88,7 @@ public class SnakeGame : MonoBehaviour
 
             // Move snake body
             Vector2 prevPosition = snakeBody[0].position;
-            
+
             snakeBody[0].position += (Vector3)direction * gridSize; // 移动距离为单元格大小
             for (int i = 1; i < snakeBody.Count; i++) // 蛇身移动
             {
@@ -91,7 +96,7 @@ public class SnakeGame : MonoBehaviour
                 snakeBody[i].position = prevPosition;
                 prevPosition = temp;
             }
-            
+
             // Check for collision with walls or itself
             if (CheckCollision())
             {
@@ -103,8 +108,13 @@ public class SnakeGame : MonoBehaviour
             {
                 if (Vector2.Distance(snakeBody[0].position, currentFood[i].position) < gridSize - 0.1f)
                 {
+                    var food = currentFood[i].GetComponent<WordAction>().word;
                     GrowSnake(currentFood[i].GetComponent<WordAction>().word);
                     //广播吃到食物的消息
+                    EventCenter.Broadcast(new GameEvent.EatFoodEvent
+                    {
+                        AteFoodWord = food,
+                    });
                 }
             }
 
@@ -112,16 +122,14 @@ public class SnakeGame : MonoBehaviour
         }
     }
 
-
-
-    void GrowSnake(string w) // 增加蛇身
+    private void GrowSnake(string w) // 增加蛇身
     {
         SnakeBody newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).GetComponent<SnakeBody>();
         newSegment.word = w;// 增加的蛇身显示的文字
         snakeBody.Add(newSegment.transform);
     }
 
-    bool CheckCollision()
+    private bool CheckCollision()
     {
         // Check collision with walls
         //if (Mathf.Abs(snakeBody[0].position.x) > 10 || Mathf.Abs(snakeBody[0].position.y) > 10)
@@ -129,18 +137,19 @@ public class SnakeGame : MonoBehaviour
 
         // Check collision with itself
 
-        
+
         for (int i = 1; i < snakeBody.Count; i++)
         {
             if (Vector2.Distance(snakeBody[0].position, snakeBody[i].position) < gridSize - 0.1f)
             {
-                if (i == snakeBody.Count - 1) {
+                if (i == snakeBody.Count - 1)
+                {
 
                     return true;// 蛇头与蛇尾碰撞
                 }
                 return true;
             }
-            
+
         }
         return false;
     }
