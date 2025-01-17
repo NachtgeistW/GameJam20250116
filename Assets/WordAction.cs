@@ -8,26 +8,37 @@ public class WordAction : MonoBehaviour
     public string word;
     // Start is called before the first frame update
 
-    void OnEnable() { }
-    void OnDisable() { }
-    void Start()
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+
+    }
+
+    private void Start()
     {
         ChangWord();
     }
+
     public string GetWord()
     {
         return word;
     }
+
     public void SetWord(string word)
     {
         this.word = word;
     }
+
     public void ChangWord()
     {
         textMesh.text = word;
     }
 
-    void DestoryAllWordsThisTurn()
+    private void DestroyAllWordsThisTurn()
     {
         //广播实现函数
 

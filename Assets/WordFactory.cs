@@ -15,11 +15,19 @@ public class WordFactory : MonoBehaviour
 
     static List<string> currentWordList;//
 
-    void OnEnable() { }
-    void OnDisable() { }
-    void Start()
+    private void OnEnable()
     {
-        gridSize=wordRenderer.bounds.size.x;
+
+    }
+
+    private void OnDisable()
+    {
+
+    }
+
+    private void Start()
+    {
+        gridSize = wordRenderer.bounds.size.x;
 
         currentWordList = new List<string>();
         currentWordList.Add("为");
@@ -30,6 +38,7 @@ public class WordFactory : MonoBehaviour
         currentWordList.Add("康");
         StartCoroutine(SpawnWordInMap());
     }
+
     public GameObject SpawnSingleWord(string word)
     {
         tempWordPosition = new Vector2(
@@ -38,6 +47,7 @@ public class WordFactory : MonoBehaviour
         );
         return Instantiate(wordPrefab, tempWordPosition, Quaternion.identity);
     }
+
     public List<Transform> SpawnWords(List<string> words)
     {
         List<Transform> wordList = new List<Transform>();
@@ -50,13 +60,13 @@ public class WordFactory : MonoBehaviour
             WordAction tempWordA = Instantiate(wordPrefab, tempWordPosition, Quaternion.identity).GetComponent<WordAction>();
             tempWordA.word = w;
             wordList.Add(tempWordA.gameObject.transform);
-            
+
             //newWord.GetComponent<TextMesh>().word = word;
         }
         return wordList;
     }
-   
-    IEnumerator SpawnWordInMap()
+
+    private IEnumerator SpawnWordInMap()
     {
         if (currentWordList.Count > 0)
         {
@@ -65,12 +75,14 @@ public class WordFactory : MonoBehaviour
         yield return WordBeDestroyed();
 
     }
-    IEnumerator WordBeDestroyed()
+
+    private static IEnumerator WordBeDestroyed()
     {
         //接收广播本次销毁开始
         yield return null;
     }
-    void DestoryAllWordsThisTurn()
+
+    private void DestroyAllWordsThisTurn()
     {
         //广播实现函数
 
