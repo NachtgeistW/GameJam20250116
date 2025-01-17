@@ -1,3 +1,5 @@
+using Assets.Scripts;
+using Plutono.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,14 +10,15 @@ public class WordAction : MonoBehaviour
     public string word;
     // Start is called before the first frame update
 
+
     private void OnEnable()
     {
-
+        EventCenter.AddListener<GameEvent.EatFoodEvent>(DestroyAllWordsThisTurn);
     }
 
     private void OnDisable()
     {
-
+        EventCenter.RemoveListener<GameEvent.EatFoodEvent>(DestroyAllWordsThisTurn);
     }
 
     private void Start()
@@ -38,9 +41,8 @@ public class WordAction : MonoBehaviour
         textMesh.text = word;
     }
 
-    private void DestroyAllWordsThisTurn()
+    private void DestroyAllWordsThisTurn(GameEvent.EatFoodEvent _)
     {
-        //广播实现函数
-
+        Destroy(gameObject);
     }
 }

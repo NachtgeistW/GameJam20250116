@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
+using Plutono.Util;
 using UnityEngine;
 
 public class SnakeGame : MonoBehaviour
@@ -108,6 +110,7 @@ public class SnakeGame : MonoBehaviour
                 {
                     GrowSnake(currentFood[i].GetComponent<WordAction>().word);
                     //广播吃到食物的消息
+                    EventCenter.Broadcast(new GameEvent.EatFoodEvent());
                 }
             }
 

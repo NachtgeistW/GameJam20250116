@@ -1,5 +1,7 @@
+using Plutono.Util;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 /// <summary>
 /// 这个类型给生成地图上面的可食用文字
@@ -17,12 +19,12 @@ public class WordFactory : MonoBehaviour
 
     private void OnEnable()
     {
-
+        EventCenter.AddListener<GameEvent.EatFoodEvent>(OnEatFoodEvent);
     }
 
     private void OnDisable()
     {
-
+        EventCenter.RemoveListener<GameEvent.EatFoodEvent>(OnEatFoodEvent);
     }
 
     private void Start()
@@ -36,7 +38,7 @@ public class WordFactory : MonoBehaviour
         currentWordList.Add("幸");
         currentWordList.Add("福");
         currentWordList.Add("康");
-        StartCoroutine(SpawnWordInMap());
+        SpawnWordInMap();
     }
 
     public GameObject SpawnSingleWord(string word)
@@ -66,25 +68,14 @@ public class WordFactory : MonoBehaviour
         return wordList;
     }
 
-    private IEnumerator SpawnWordInMap()
+    private void OnEatFoodEvent(GameEvent.EatFoodEvent _)
     {
-        if (currentWordList.Count > 0)
-        {
-            SnakeGame.currentFood = SpawnWords(currentWordList);
-        }
-        yield return WordBeDestroyed();
-
+        SpawnWordInMap();
     }
 
-    private static IEnumerator WordBeDestroyed()
+    private void SpawnWordInMap()
     {
-        //接收广播本次销毁开始
-        yield return null;
+        SnakeGame.currentFood = SpawnWords(currentWordList);
     }
 
-    private void DestroyAllWordsThisTurn()
-    {
-        //广播实现函数
-
-    }
 }
