@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts;
 using Plutono.Util;
 using UnityEngine;
+using static Assets.Scripts.GameEvent;
 
 public class Snake : MonoBehaviour
 {
@@ -34,6 +36,16 @@ public class Snake : MonoBehaviour
             Debug.LogError("Snake head is null!");
         }
 
+    }
+
+    private void OnEnable()
+    {
+        EventCenter.AddListener<GameEvent.GameOverEvent>(OnGameOverEvent);
+    }
+
+    private void OnDisable()
+    {
+        EventCenter.RemoveListener<GameEvent.GameOverEvent>(OnGameOverEvent);
     }
 
     private void Start()
@@ -101,7 +113,7 @@ public class Snake : MonoBehaviour
             if (CheckCollision())
             {
                 isGameOver = true;
-                Debug.Log("Game Over!");
+                //Debug.Log("Game Over!");
             }
             // Check for collision with words
             for (int i = 0; i < currentFood.Count; i++)
@@ -142,15 +154,23 @@ public class Snake : MonoBehaviour
         {
             if (Vector2.Distance(snakeBody[0].position, snakeBody[i].position) < gridSize - 0.1f)
             {
-                if (i == snakeBody.Count - 1)
+                if (i == snakeBody.Count - 1&&isTimeToOver)
                 {
-
+                    Debug.Log("Game Complete!");
+                    isGameOver = true;
                     return true;// 蛇头与蛇尾碰撞
                 }
-                return true;
+                //return true;
             }
 
         }
         return false;
+    }
+    public bool isTimeToOver=false;
+
+    private void OnGameOverEvent(GameOverEvent evt)
+    {
+        if (!evt.isSucceed) return;
+        isTimeToOver = true;
     }
 }
