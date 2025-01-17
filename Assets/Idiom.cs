@@ -235,6 +235,7 @@ namespace Assets
                             }
 
                             gameOver = true;
+                            EventCenter.Broadcast(new GameOverEvent { isSucceed = true });
                         }
                         else
                         {
