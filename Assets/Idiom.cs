@@ -17,7 +17,7 @@ namespace Assets
         {
             { '为', "wei" }, { '计', "ji" }, { '翼', "yi" }, { '尊', "zun" }, { '大', "da" },
             { '德', "de" }, { '表', "biao" }, { '一', "yi" }, { '善', "shan" }, { '意', "yi" },
-            { '情', "qing" }, { '青', "qing" }, { '水', "shui" }, { '万', "wan" }, { '吉', "ji" },
+            { '情', "qing" }, {'清', "qing" }, {'青', "qing" }, { '水', "shui" }, { '万', "wan" }, { '吉', "ji" },
             { '集', "ji" }, { '益', "yi" }, { '急', "ji" }, { '利', "li" }, { '备', "bei" },
             { '背', "bei" }, { '义', "yi" }, { '生', "sheng" }, { '然', "ran" }, { '勃', "bo" },
             { '薄', "bo" }, { '关', "guan" }, { '至', "zhi" }, { '志', "zhi" }, { '合', "he" },
@@ -55,7 +55,7 @@ namespace Assets
     {
         public List<Idiom> idioms;
         private Random random;
-        public List<string> usedIdioms;
+        
         public char firstCharacter;
         public string firstCharacterPinyin;
         public List<string> WordList;
@@ -70,7 +70,7 @@ namespace Assets
         public IdiomGame(string filePath)
         {
             idioms = new List<Idiom>();
-            usedIdioms = new List<string>();
+          
             random = new Random();
             LoadIdioms(filePath);
             Init();
@@ -104,7 +104,7 @@ namespace Assets
         public List<char> GetPossibleSecondCharacters(char firstChar)
         {
             var possibleChars = idioms
-                .Where(i => i.Characters[0] == firstChar && !usedIdioms.Contains(i.Word))
+                .Where(i => i.Characters[0] == firstChar )
                 .Select(i => i.Characters[1])
                 .Distinct()
                 .ToList();
@@ -116,8 +116,7 @@ namespace Assets
         {
             var possibleChars = idioms
                 .Where(i => i.Characters[0] == firstChar &&
-                            i.Characters[1] == secondChar &&
-                            !usedIdioms.Contains(i.Word))
+                            i.Characters[1] == secondChar )
                 .Select(i => i.Characters[2])
                 .Distinct()
                 .ToList();
@@ -130,8 +129,7 @@ namespace Assets
             var possibleChars = idioms
                 .Where(i => i.Characters[0] == firstChar &&
                             i.Characters[1] == secondChar &&
-                            i.Characters[2] == thirdChar &&
-                            !usedIdioms.Contains(i.Word))
+                            i.Characters[2] == thirdChar )
                 .Select(i => i.Characters[3])
                 .Distinct()
                 .ToList();
@@ -144,7 +142,7 @@ namespace Assets
             var lastCharPinyin = ChinesePinyin.GetPinyin(lastChar);
 
             var possibleChars = idioms
-                .Where(i => !usedIdioms.Contains(i.Word))
+                
                 .Where(i => ChinesePinyin.GetPinyin(i.Characters[0]) == lastCharPinyin)
                 .Select(i => i.Characters[0])
                 .Distinct()
@@ -155,7 +153,7 @@ namespace Assets
 
         public bool ValidateIdiom(string word)
         {
-            return idioms.Any(i => i.Word == word && !usedIdioms.Contains(word));
+            return idioms.Any(i => i.Word == word );
         }
 
         bool isFirstTune = true;
@@ -163,14 +161,10 @@ namespace Assets
 
         public void PlayGame(EatFoodEvent evt)
         {
-            if (gameOver)
-            {
-                EventCenter.Broadcast(new GameOverEvent { isSucceed = true });
-            }
-
             if (isFirstTune)
             {
                 firstCharacter = evt.AteFoodWord.ToCharArray()[0];
+                firstCharacterPinyin = ChinesePinyin.GetPinyin(firstCharacter);
                 isFirstTune = false;
             }
 
@@ -221,33 +215,27 @@ namespace Assets
                     var currentWord = $"{curFirstCharacter}{curSecondCharacter}{curThirdCharacter}{curFourthCharacter}";
                     if (ValidateIdiom(currentWord))
                     {
-                        usedIdioms.Add(currentWord);
+                        
                         Debug.Log($"当前成语：{currentWord}");
 
                         // 检查是否完成循环（通过拼音匹配）
                         var lastCharPinyin = ChinesePinyin.GetPinyin(curFourthCharacter);
                         if (lastCharPinyin == firstCharacterPinyin)
                         {
-                            Debug.Log("恭喜！成功完成首尾相接的成语接龙！");
-                            Debug.Log("使用的成语：");
-                            for (var i = 0; i < usedIdioms.Count; i++)
-                            {
-                                Debug.Log($"{i + 1}. {usedIdioms[i]}");
-                            }
-
-                            gameOver = true;
+                           
+                            //gameOver = true;
                             EventCenter.Broadcast(new GameOverEvent { isSucceed = true });
                         }
-                        else
+                        
                         {
+                        }
+
                             // 继续游戏
                             curFirstCharacter = curFourthCharacter;
                             Debug.Log($"\n下一个成语开始字：{curFirstCharacter}");
                             var firstChars = GetNextPossibleFirstCharacters(curFirstCharacter);
                             WordList = firstChars.Select(c => c.ToString()).ToList();
                             EventCenter.Broadcast(new UpdateWordlistEvent { WordList = WordList });
-                        }
-
                         curCharIndex = 1;
                     }
                     else

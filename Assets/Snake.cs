@@ -154,13 +154,14 @@ public class Snake : MonoBehaviour
         {
             if (Vector2.Distance(snakeBody[0].position, snakeBody[i].position) < gridSize - 0.1f)
             {
-                if (i == snakeBody.Count - 1&&isTimeToOver)
+                if (i == (snakeBody.Count - 1)&& isTimeToOver)
                 {
                     Debug.Log("Game Complete!");
                     isGameOver = true;
                     return true;// 蛇头与蛇尾碰撞
                 }
-                //return true;
+                Debug.Log("Game Over!");
+                return true;
             }
 
         }
@@ -170,6 +171,7 @@ public class Snake : MonoBehaviour
 
     private void OnGameOverEvent(GameOverEvent evt)
     {
+        //Debug.Log("isTimeToOver");
         if (!evt.isSucceed) return;
         isTimeToOver = true;
     }
