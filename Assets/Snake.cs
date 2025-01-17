@@ -4,7 +4,7 @@ using Assets.Scripts;
 using Plutono.Util;
 using UnityEngine;
 
-public class SnakeGame : MonoBehaviour
+public class Snake : MonoBehaviour
 {
     public GameObject snakePrefab;
     //public float gridSize = 1.0f; //单元格大小 使用图片的尺寸

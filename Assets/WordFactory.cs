@@ -75,7 +75,7 @@ public class WordFactory : MonoBehaviour
 
     private void SpawnWordInMap()
     {
-        SnakeGame.currentFood = SpawnWords(currentWordList);
+        Snake.currentFood = SpawnWords(currentWordList);
     }
 
 }
