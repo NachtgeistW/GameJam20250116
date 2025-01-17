@@ -16,35 +16,31 @@ public class WordFactory : MonoBehaviour
     private float gridSize;
     private Vector2 tempWordPosition;
 
-    static List<string> currentWordList;//
+    static List<string> currentWordList = new();//
 
     private void OnEnable()
     {
         EventCenter.AddListener<GameEvent.EatFoodEvent>(OnEatFoodEvent);
+        EventCenter.AddListener<GameEvent.GenerateFirstCharacterEvent>(OnGenerateFirstCharacterEvent);
     }
 
     private void OnDisable()
     {
         EventCenter.RemoveListener<GameEvent.EatFoodEvent>(OnEatFoodEvent);
+        EventCenter.RemoveListener<GameEvent.GenerateFirstCharacterEvent>(OnGenerateFirstCharacterEvent);
     }
 
     private void Start()
     {
         gridSize = wordRenderer.bounds.size.x;
 
-        var firstWordList =
-        GameManager.Instance.Game.idioms
-            .Select(i => i.Characters[0].ToString())
-            .ToList();
-
-        currentWordList = new List<string>();
-        var random = new System.Random();
-        var firstCharIndex = random.Next(0, firstWordList.Count);
-        currentWordList.Add(firstWordList[firstCharIndex]);
-        firstWordList.RemoveAt(firstCharIndex);
-        currentWordList.Add(firstWordList[random.Next(0, firstWordList.Count)]);
-
+        currentWordList.AddRange(GameManager.Instance.Game.firstWordList);
         SpawnWordInMap();
+    }
+
+    private void OnGenerateFirstCharacterEvent(GameEvent.GenerateFirstCharacterEvent evt)
+    {
+;
     }
 
     public GameObject SpawnSingleWord(string word)

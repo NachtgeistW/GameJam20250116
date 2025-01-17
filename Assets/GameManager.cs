@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>
     public IdiomGame Game { get; private set; }
     //private void OnEnable()
     //{
-    //    EventCenter.AddListener<GameEvent.GetFirstCharacterEvent>();
+    //    EventCenter.AddListener<GameEvent.GenerateFirstCharacterEvent>();
     //    EventCenter.AddListener<GameEvent.GetSecondCharacterEvent>();
     //    EventCenter.AddListener<GameEvent.GetThirdCharacterEvent>();
     //    EventCenter.AddListener<GameEvent.GetFourthCharacterEvent>();
@@ -18,7 +18,7 @@ public class GameManager : Singleton<GameManager>
 
     //private void OnDisable()
     //{
-    //    EventCenter.RemoveListener<GameEvent.GetFirstCharacterEvent>();
+    //    EventCenter.RemoveListener<GameEvent.GenerateFirstCharacterEvent>();
     //    EventCenter.RemoveListener<GameEvent.GetSecondCharacterEvent>();
     //    EventCenter.RemoveListener<GameEvent.GetThirdCharacterEvent>();
     //    EventCenter.RemoveListener<GameEvent.GetFourthCharacterEvent>();
@@ -30,5 +30,6 @@ public class GameManager : Singleton<GameManager>
 
         const string filePath = "´Ê¿â.txt";
         Game = new IdiomGame(filePath);
+        Game.PlayGame();
     }
 }
