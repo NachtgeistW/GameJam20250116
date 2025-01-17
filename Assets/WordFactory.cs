@@ -1,6 +1,7 @@
 using Plutono.Util;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts;
 using UnityEngine;
 /// <summary>
@@ -31,13 +32,18 @@ public class WordFactory : MonoBehaviour
     {
         gridSize = wordRenderer.bounds.size.x;
 
+        var firstWordList =
+        GameManager.Instance.Game.idioms
+            .Select(i => i.Characters[0].ToString())
+            .ToList();
+
         currentWordList = new List<string>();
-        currentWordList.Add("为");
-        currentWordList.Add("你");
-        currentWordList.Add("祝");
-        currentWordList.Add("幸");
-        currentWordList.Add("福");
-        currentWordList.Add("康");
+        var random = new System.Random();
+        var firstCharIndex = random.Next(0, firstWordList.Count);
+        currentWordList.Add(firstWordList[firstCharIndex]);
+        firstWordList.RemoveAt(firstCharIndex);
+        currentWordList.Add(firstWordList[random.Next(0, firstWordList.Count)]);
+
         SpawnWordInMap();
     }
 

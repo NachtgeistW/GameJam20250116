@@ -47,11 +47,11 @@ namespace Assets
 
     public class IdiomGame
     {
-        private List<Idiom> idioms;
+        public List<Idiom> idioms;
         private Random random;
-        private List<string> usedIdioms;
-        private char firstCharacter;
-        private string firstCharacterPinyin;
+        public List<string> usedIdioms;
+        public char firstCharacter;
+        public string firstCharacterPinyin;
 
         public IdiomGame(string filePath)
         {
