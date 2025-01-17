@@ -8,18 +8,31 @@ public class SnakeGame : MonoBehaviour
     public SpriteRenderer snakeRenderer;
     public float gridSize; //图片大小
     public float moveInterval = 0.5f;
+
     private List<Transform> snakeBody = new List<Transform>();
     private Vector2 direction = Vector2.right;
     private bool isGameOver = false;
+
 
     void Start()
     {
         Vector2 spriteSize = snakeRenderer.sprite.bounds.size; //图片大小
         gridSize = spriteSize.x;
         // Initialize snake
-        snakeBody.Add(Instantiate(snakePrefab, Vector2.zero, Quaternion.identity).transform);
-        
+        snakeBody.Add(Instantiate(snakePrefab, Vector2.zero, Quaternion.identity).transform);// 实例化蛇头
+
         StartCoroutine(MoveSnake());
+        StartCoroutine(Grows());
+
+    }
+    IEnumerator Grows()
+    {
+        while (!isGameOver)
+        {
+            yield return new WaitForSeconds(1f);
+            GrowSnake();
+        }
+        
     }
 
     void Update()
@@ -35,6 +48,7 @@ public class SnakeGame : MonoBehaviour
             direction = Vector2.left;
         else if (Input.GetKeyDown(KeyCode.D) && direction != Vector2.left)
             direction = Vector2.right;
+
     }
 
     IEnumerator MoveSnake()
@@ -69,8 +83,9 @@ public class SnakeGame : MonoBehaviour
 
     void GrowSnake() // 增加蛇身
     {
-        Transform newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).transform;
-        snakeBody.Add(newSegment);
+        SnakeBody newSegment = Instantiate(snakePrefab, snakeBody[snakeBody.Count - 1].position, Quaternion.identity).GetComponent<SnakeBody>();
+        newSegment.word = "为";// 增加的蛇身显示的文字
+        snakeBody.Add(newSegment.transform);
     }
 
     bool CheckCollision()
