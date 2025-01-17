@@ -144,8 +144,8 @@ public class Snake : MonoBehaviour
     private bool CheckCollision()
     {
         // Check collision with walls
-        //if (Mathf.Abs(snakeBody[0].position.x) > 10 || Mathf.Abs(snakeBody[0].position.y) > 10)
-        //return true;
+        if (Mathf.Abs(snakeBody[0].position.x) > 7*gridSize || Mathf.Abs(snakeBody[0].position.y) > 7*gridSize)
+            return true;
 
         // Check collision with itself
 
@@ -154,13 +154,14 @@ public class Snake : MonoBehaviour
         {
             if (Vector2.Distance(snakeBody[0].position, snakeBody[i].position) < gridSize - 0.1f)
             {
-                if (i == snakeBody.Count - 1&&isTimeToOver)
+                if (i == (snakeBody.Count - 1)&& isTimeToOver)
                 {
                     Debug.Log("Game Complete!");
                     isGameOver = true;
                     return true;// 蛇头与蛇尾碰撞
                 }
-                //return true;
+                Debug.Log("Game Over!");
+                return true;
             }
 
         }
@@ -170,6 +171,7 @@ public class Snake : MonoBehaviour
 
     private void OnGameOverEvent(GameOverEvent evt)
     {
+        //Debug.Log("isTimeToOver");
         if (!evt.isSucceed) return;
         isTimeToOver = true;
     }
